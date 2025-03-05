@@ -1,0 +1,18 @@
+---
+# Generic demonstration namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: karoly-boss-namespace
+---
+# Petclinic deployment namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: petclinic-namespace
+---
+# HAProxy namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: haproxy-namespace

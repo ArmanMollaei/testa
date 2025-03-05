@@ -1,0 +1,15 @@
+# ConfigMap for demo
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-configmap
+  namespace: karoly-boss-namespace
+data:
+  MY_ENV_VAR_1: "whatever"
+  MY_CUSTOM_VAR_2: "somethinglikethat"
+  custom.properties: |
+    var1="value1"
+    var2="value2"
+  another.properties: |
+    var3="value3"
+    var4="value4"

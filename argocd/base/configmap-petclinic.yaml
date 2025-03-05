@@ -1,0 +1,16 @@
+# ConfigMap for PetClinic
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: petclinic-configmap
+  namespace: petclinic-namespace
+data:
+  MYSQL_URL: "jdbc:mysql://localhost:3306/petclinic"
+  MYSQL_DB: "petclinic"
+  MYSQL_USER: "petclinic"
+  user.sql: |
+    CREATE DATABASE IF NOT EXISTS petclinic;
+    ALTER DATABASE petclinic
+    DEFAULT CHARACTER SET utf8
+    DEFAULT COLLATE utf8_general_ci;
+    GRANT ALL PRIVILEGES ON petclinic.* TO 'petclinic'@'%' IDENTIFIED BY 'petclinic';

@@ -1,0 +1,79 @@
+# Petclinic deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-petclinic
+  namespace: petclinic-namespace
+spec:
+  selector:
+    matchLabels:
+      app: spring-petclinic
+  template:
+    metadata:
+      labels:
+        app: spring-petclinic
+    spec:
+      containers:
+        - image: lscr.io/linuxserver/mariadb:latest
+          name: spring-petclinic-mysql-01
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: petclinic-secret-argocd
+                  key: MYSQL_ROOT_PASSWORD
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: petclinic-secret-argocd
+                  key: MYSQL_PASSWORD
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: petclinic-configmap
+                  key: MYSQL_DB
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: petclinic-configmap
+                  key: MYSQL_USER
+          volumeMounts:
+            - mountPath: /config/initdb.d/user.sql
+              name: user-sql-mount
+              readOnly: true
+              subPath: user.sql
+            - mountPath: /var/lib/mysql
+              name: mysql-data-mount
+          workingDir: /
+        - image: docker.io/nemgyuri/petclinic-test:v1.0
+          name: spring-petclinic-app-01
+          env:
+            - name: MYSQL_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: petclinic-configmap
+                  key: MYSQL_URL
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: petclinic-configmap
+                  key: MYSQL_USER
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: petclinic-secret-argocd
+                  key: MYSQL_PASSWORD
+            - name: MYSQL_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: petclinic-configmap
+                  key: MYSQL_DB
+          workingDir: /
+      restartPolicy: Always
+      volumes:
+        - name: user-sql-mount
+          configMap:
+            name: petclinic-configmap
+        - name: mysql-data-mount
+          persistentVolumeClaim:
+            claimName: petclinic-pvc

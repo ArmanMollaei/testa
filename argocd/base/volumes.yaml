@@ -1,0 +1,36 @@
+---
+# Volume for NGINX StatefulSet
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nginx-data
+  namespace: karoly-boss-namespace
+  labels:
+    type: local
+    volume-name: nginx-vol-01
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/vagrant/nginx"
+---
+# Volume for PetClinic
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: petclinic-data
+  namespace: petclinic-namespace
+  labels:
+    type: local
+    volume-name: petclinic-vol-01
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/vagrant/mysql"

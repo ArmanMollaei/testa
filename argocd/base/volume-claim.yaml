@@ -1,0 +1,33 @@
+---
+# PersistentVolumeClaims
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nginx-pvc
+  namespace: karoly-boss-namespace
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  selector:
+    matchLabels:
+      volume-name: nginx-vol-01
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: petclinic-pvc
+  namespace: petclinic-namespace
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  selector:
+    matchLabels:
+      volume-name: petclinic-vol-01

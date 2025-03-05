@@ -1,0 +1,29 @@
+# HAProxy deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: haproxy-deployment
+  namespace: haproxy-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: haproxy
+  template:
+    metadata:
+      labels:
+        app: haproxy
+    spec:
+      containers:
+        - name: haproxy
+          image: haproxytech/haproxy-alpine:2.7
+          volumeMounts:
+            - name: haproxy-cm-mount
+              mountPath: /usr/local/etc/haproxy/haproxy.cfg
+              subPath: haproxy.cfg
+        - name: test-backend-1
+          image: nginxdemos/hello
+      volumes:
+        - name: haproxy-cm-mount
+          configMap:
+            name: haproxy-configmap
